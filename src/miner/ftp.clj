@@ -30,12 +30,14 @@
             connect-timeout-ms
             default-timeout-ms
             control-keep-alive-timeout-sec
-            control-keep-alive-reply-timeout-ms]
+            control-keep-alive-reply-timeout-ms
+            strict-parsing]
      :or {security-mode :explicit
           data-timeout-ms -1
           connect-timeout-ms 30000
           control-keep-alive-timeout-sec 300
-          control-keep-alive-reply-timeout-ms 1000}}]
+          control-keep-alive-reply-timeout-ms 1000
+          strict-parsing true}}]
    (let [implicit? (not= :explicit security-mode)
          ^URI uri (as-uri url)
          ^FTPClient client (case (.getScheme uri)
@@ -49,6 +51,7 @@
      (.setDataTimeout client data-timeout-ms)
      (.setControlKeepAliveTimeout client control-keep-alive-timeout-sec)
      (.setControlKeepAliveReplyTimeout client control-keep-alive-reply-timeout-ms)
+     (.setStrictReplyParsing client strict-parsing)
      (.connect client
                (.getHost uri)
                (if (= -1 (.getPort uri)) (int 21) (.getPort uri)))
